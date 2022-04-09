@@ -1,0 +1,22 @@
+.mainStack {
+  margin: 1rem;
+}
+
+.welcomeStack {
+  margin: 1rem;
+}
+
+.headerStack {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.balanceStack {
+  align-items: center;
+  margin: 1rem;
+}
+
+.cropComboBox {
+    margin: 0.5rem;
+    width: 10rem;
+}
