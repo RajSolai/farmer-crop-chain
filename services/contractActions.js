@@ -10,7 +10,7 @@ const connectTrigger = () => {
   const provider = window.ethereum;
   if (typeof provider != "undefined") {
     provider.request({ method: "eth_requestAccounts" }).then((acc) => {
-      const sender = acc[0];
+      const sender = acc[0].toLowerCase();
       localStorage.setItem("acc", sender);
       connect(provider, sender);
     });
@@ -31,17 +31,12 @@ export const connect = (provider, _sender) => {
   console.log("Connected to Web3 provider");
 };
 
-const sendETHToBuy = (toAddress, ethAmount, nextFunction) => {
-  web3.eth.sendTransaction(
-    {
-      from: sender,
-      to: toAddress,
-      value: web3.utils.toWei(ethAmount.toString(), "ether"),
-    },
-    (err, res) => {
-      nextFunction(err, res);
-    }
-  );
+const sendETHToBuy = (toAddress, ethAmount) => {
+  web3.eth.sendTransaction({
+    from: sender,
+    to: toAddress,
+    value: web3.utils.toWei(ethAmount.toString(), "ether"),
+  });
 };
 
 export const callAddCrops = (cropType, cropQuantity) => {
@@ -59,6 +54,7 @@ export const callAddCrops = (cropType, cropQuantity) => {
 export const getBalanceOf = (userId, cropType, nextFunction) => {
   cropChain.methods.showUserBalance(cropType, userId).call((err, res) => {
     if (err) console.error(err);
+    console.log("Balance of ", userId, " is ", res);
     nextFunction(res);
   });
 };
@@ -71,28 +67,24 @@ export const callBuyCrops = (
   fromId,
   userId
 ) => {
-  connectTrigger();
   cropType = cropType.toString().toLowerCase();
   Swal.fire("Please Complete the ETH Transaction");
   ethAmount = getCropPrice(cropType, (val) => {
     console.log("Crop price of and is ", cropType, val);
-    sendETHToBuy(toAddress, val / 10000, (err, res) => {
-      if (err) {
-        Swal.fire("ETH Transaction Failed");
-      } else {
-        transferCrops(cropType, cropQuantity, fromId, userId);
-      }
-    });
+    sendETHToBuy(toAddress, val / 10000);
+    transferCrops(cropType, cropQuantity, fromId, userId);
   });
-  console.log(toAddress, ethAmount, cropType, cropQuantity, fromId, userId);
+  console.log({ toAddress, ethAmount, cropType, cropQuantity, fromId, userId });
 };
 
 export const transferCrops = (cropType, cropQuantity, fromId, userId) => {
+  console.log({ cropType, cropQuantity, fromId, userId });
   cropChain.methods
     .buyCrops(cropQuantity, cropType, fromId, userId)
     .send({ from: sender }, (err, res) => {
       if (err) console.error(err);
-      Swal.fire("Crops Bought Successfully");
+      console.log(res);
+      // Swal.fire("Crops Bought Successfully");
     });
 };
 

@@ -25,12 +25,19 @@ export default function BuyerPortal({ userType, buttonLabel, formLabel }) {
   };
 
   const buyCrops = () => {
-    callBuyCrops(
+    console.log({
       fromFarmer,
-      0,
       buyCropType,
       addedCropQuantity,
       fromFarmer,
+      acc: localStorage.getItem("acc"),
+    });
+    callBuyCrops(
+      fromFarmer.toLowerCase(),
+      0,
+      buyCropType,
+      addedCropQuantity,
+      fromFarmer.toLowerCase(),
       localStorage.getItem("acc")
     );
   };
