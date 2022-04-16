@@ -6,23 +6,6 @@ let cropChain = null;
 let sender = null;
 let web3 = null;
 
-const connectTrigger = () => {
-  const provider = window.ethereum;
-  if (typeof provider != "undefined") {
-    provider.request({ method: "eth_requestAccounts" }).then((acc) => {
-      const sender = acc[0].toLowerCase();
-      localStorage.setItem("acc", sender);
-      connect(provider, sender);
-    });
-  } else {
-    Swal.fire(
-      "No Wallets Found",
-      "Hey It seems you haven't installed Metamask extension",
-      "warning"
-    );
-  }
-};
-
 export const connect = (provider, _sender) => {
   const _web3 = new Web3(provider);
   web3 = _web3;
@@ -84,14 +67,17 @@ export const transferCrops = (cropType, cropQuantity, fromId, userId) => {
     .send({ from: sender }, (err, res) => {
       if (err) console.error(err);
       console.log(res);
-      // Swal.fire("Crops Bought Successfully");
+      Swal.fire(
+        "Crops Bought Successfully",
+        "Please wait until the transaction is completed"
+      );
     });
 };
 
 export const setCropPriceInChain = (cropType, cropPrice) => {
   cropChain.methods
     .setCropPrice(cropType.toLowerCase(), cropPrice)
-    .send({ from: sender }, (err, res) => {
+    .send({ from: sender }, (err, _) => {
       if (err) {
         Swal.fire("Crop Price Setting Failed");
         console.error(err);
@@ -106,5 +92,47 @@ export const getCropPrice = (cropType, nextFunction) => {
       console.log("Price of ", cropType.toLowerCase(), " is ", res);
       nextFunction(res);
     }
+  });
+};
+
+export const loginUser = (userPassword, userType, nextFunction) => {
+  cropChain.methods
+    .loginUser(localStorage.getItem("acc"), userPassword, userType)
+    .call((err, res) => {
+      if (!err) {
+        console.log(res);
+        if (res === "login-success") nextFunction(res);
+      }
+    });
+};
+
+export const getAllCrops = () => {
+  cropChain.methods.getCropTypes().call((_, res) => {
+    if (!res) nextFunction(res);
+  });
+};
+
+export const addNewCrop = (cropType) => {
+  cropChain.methods.addCropType(cropType).send({ from: sender }, (err, _) => {
+    if (!err)
+      Swal.fire("CropType Added", "Please wait until Transaction is confirmed");
+  });
+};
+
+export const registerUser = (userPassword, userType) => {
+  cropChain.methods
+    .createUser(localStorage.getItem("acc"), userPassword, userType)
+    .send({ from: sender }, (err, _) => {
+      if (!err)
+        Swal.fire(
+          "Thanks for Registering",
+          "Please Login after the Transaction is confirmed"
+        );
+    });
+};
+
+export const getAllTransactions = (nextFunction) => {
+  cropChain.methods.showTransactions().call((err, res) => {
+    if (!res) nextFunction(res);
   });
 };
