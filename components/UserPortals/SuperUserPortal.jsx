@@ -4,11 +4,25 @@ import { useSelector } from "react-redux";
 import { cropTypes } from "../../services/constants";
 import fps from "../../styles/FarmerPortal.module.css";
 import { Box } from "@mui/system";
-import { formStyle, textFieldStyle } from "../login";
 import {
   getCropPrice,
   setCropPriceInChain,
 } from "../../services/contractActions";
+
+
+export const formStyle = {
+  display: "flex",
+  marginTop: "5rem",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  padding: "1rem",
+};
+
+export const textFieldStyle = {
+  width: 300,
+  margin: "0.5rem",
+};
 
 export default function SuperUserPortal() {
   const userName = useSelector((s) => s.userName);
