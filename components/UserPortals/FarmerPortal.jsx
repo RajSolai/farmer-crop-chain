@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stack, Autocomplete, TextField, Button } from "@mui/material";
 import { useSelector } from "react-redux";
-import { cropTypes } from "../../services/constants";
 import fps from "../../styles/FarmerPortal.module.css";
 import { Box } from "@mui/system";
 import {
   getBalanceOf,
   callAddCrops,
-  setCropPrice
+  getAllCrops,
 } from "../../services/contractActions";
 
 export const formStyle = {
@@ -26,6 +25,8 @@ export const textFieldStyle = {
 
 export default function FarmerPortal() {
   const userName = useSelector((s) => s.userName);
+  const [cropTypes, setCropTypes] = useState([]);
+
   const [addedCropQuantity, setCropQuantity] = useState(0);
   const [addCropType, setCropType] = useState("");
   const [cropBalance, setCropBalance] = useState(0);
@@ -43,6 +44,13 @@ export default function FarmerPortal() {
   const addCropsToChain = () => {
     callAddCrops(addCropType.toLowerCase(), addedCropQuantity);
   };
+
+  useEffect(() => {
+    getAllCrops((crops) => {
+      console.log(crops);
+      setCropTypes(crops);
+    });
+  });
 
   return (
     <>

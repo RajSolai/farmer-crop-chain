@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Stack, Autocomplete, TextField, Button } from "@mui/material";
 import { useSelector } from "react-redux";
-import { cropTypes } from "../../services/constants";
 import fps from "../../styles/FarmerPortal.module.css";
 import { Box } from "@mui/system";
+import { userTypes } from "../../pages/login";
+
 import {
+  addANewCrop,
+  getAllCrops,
   getCropPrice,
+  registerUser,
   setCropPriceInChain,
 } from "../../services/contractActions";
-
 
 export const formStyle = {
   display: "flex",
@@ -26,9 +29,26 @@ export const textFieldStyle = {
 
 export default function SuperUserPortal() {
   const userName = useSelector((s) => s.userName);
+  const [cropTypes, setCropTypes] = useState([]);
   const [addCropType, setCropType] = useState("");
   const [addCropPrice, setAddCropPrice] = useState(0);
   const [cropPrice, setCropPrice] = useState(0);
+
+  const [cUserName, setUserName] = useState("");
+  const [userType, setUserType] = useState("");
+  const [userPass, setUserPass] = useState("");
+  const [userAccount, setUserAccount] = useState("");
+
+  const [newCropName, setNewCropName] = useState("");
+
+  const addNewUser = () => {
+    console.log({ cUserName, userType, userAccount, userPass });
+    registerUser(userAccount,userPass,userType)
+  };
+
+  const addNewCrop = () => {
+    addANewCrop(newCropName.toLowerCase());
+  };
 
   const updateCropPrice = (_, val) => {
     if (!val) {
@@ -43,6 +63,13 @@ export default function SuperUserPortal() {
   const changeCropPriceInChain = () => {
     setCropPriceInChain(addCropType, addCropPrice);
   };
+
+  useEffect(() => {
+    getAllCrops((crops) => {
+      console.log(crops);
+      setCropTypes(crops);
+    });
+  });
 
   return (
     <>
@@ -68,7 +95,7 @@ export default function SuperUserPortal() {
           <h4>Current Price : {cropPrice}</h4>
         </Stack>
         <div style={{ padding: "1rem" }}>
-          <h2 style={{ margin: 0 }}>Add Crops</h2>
+          <h2 style={{ margin: 0 }}>Update Crop Prices</h2>
         </div>
         <Box
           component={"form"}
@@ -101,6 +128,78 @@ export default function SuperUserPortal() {
           />
           <Button variant="contained" onClick={changeCropPriceInChain}>
             Update Price
+          </Button>
+        </Box>
+        <div style={{ padding: "1rem" }}>
+          <h2 style={{ margin: 0 }}>Add New Crop</h2>
+        </div>
+        <Box
+          component={"form"}
+          sx={{
+            ...formStyle,
+            alignItems: "center",
+            justifyContent: "flex-start",
+            margin: "0.2rem",
+            flexDirection: "row",
+          }}
+        >
+          <TextField
+            id="s-user-name"
+            onChange={(e) => setNewCropName(e.target.value)}
+            sx={textFieldStyle}
+            label="New Crop's Name"
+            variant="outlined"
+          />
+          <Button variant="contained" onClick={addNewCrop}>
+            Add New Crops
+          </Button>
+        </Box>
+        <div style={{ padding: "1rem" }}>
+          <h2 style={{ margin: 0 }}>Add New Users</h2>
+        </div>
+        <Box
+          component={"form"}
+          sx={{
+            ...formStyle,
+            alignItems: "center",
+            justifyContent: "flex-start",
+            margin: "0.2rem",
+            flexDirection: "row",
+          }}
+        >
+          <TextField
+            id="s-user-name"
+            onChange={(e) => setUserName(e.target.value)}
+            sx={textFieldStyle}
+            label="New User's Username"
+            variant="outlined"
+          />
+          <TextField
+            id="s-user-account"
+            onChange={(e) => setUserAccount(e.target.value)}
+            sx={textFieldStyle}
+            label="New User's Account Number"
+            variant="outlined"
+          />
+          <TextField
+            id="s-user-pass"
+            onChange={(e) => setUserPass(e.target.value)}
+            sx={textFieldStyle}
+            label="New User's Password"
+            variant="outlined"
+          />
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={userTypes}
+            onChange={(_, val) => setUserType(val.label.toLowerCase() || "")}
+            sx={{ width: 300, margin: "0.5rem" }}
+            renderInput={(params) => (
+              <TextField {...params} label="User Type" />
+            )}
+          />
+          <Button variant="contained" onClick={addNewUser}>
+            Add
           </Button>
         </Box>
       </Stack>

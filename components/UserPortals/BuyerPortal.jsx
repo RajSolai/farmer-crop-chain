@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stack, Autocomplete, TextField, Button } from "@mui/material";
 import { useSelector } from "react-redux";
-import { cropTypes } from "../../services/constants";
 import fps from "../../styles/FarmerPortal.module.css";
 import { Box } from "@mui/system";
-import { callBuyCrops, getBalanceOf } from "../../services/contractActions";
+import {
+  callBuyCrops,
+  getBalanceOf,
+  getAllCrops,
+} from "../../services/contractActions";
 
 export const formStyle = {
   display: "flex",
@@ -22,6 +25,8 @@ export const textFieldStyle = {
 
 export default function BuyerPortal({ userType, buttonLabel, formLabel }) {
   const userName = useSelector((s) => s.userName);
+  const [cropTypes, setCropTypes] = useState([]);
+
   const [addedCropQuantity, setCropQuantity] = useState(0);
   const [buyCropType, setCropType] = useState("");
   const [fromFarmer, setFarmer] = useState("");
@@ -54,6 +59,13 @@ export default function BuyerPortal({ userType, buttonLabel, formLabel }) {
       localStorage.getItem("acc")
     );
   };
+
+  useEffect(() => {
+    getAllCrops((crops) => {
+      console.log(crops);
+      setCropTypes(crops);
+    });
+  });
 
   return (
     <>
