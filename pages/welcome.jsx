@@ -1,28 +1,17 @@
 import { Button } from "@mui/material";
 import Link from "next/link";
-import React, { useEffect } from "react";
-import { connect, getCropsAndPrices } from "../services/contractActions";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  connect,
+  getCropsAndPrices,
+  getAllTransactions,
+} from "../services/contractActions";
 import style from "../styles/welcome.module.scss";
 
 export default function Welcome() {
-  useEffect(() => {
-    const provider = window.ethereum;
-    if (typeof provider != "undefined") {
-      provider.request({ method: "eth_requestAccounts" }).then((acc) => {
-        const sender = acc[0];
-        localStorage.setItem("acc", sender);
-        connect(provider, sender,()=>{
-          getCropsAndPrices();
-        });
-      });
-    } else {
-      Swal.fire(
-        "No Wallets Found",
-        "Hey It seems you haven't installed Metamask extension",
-        "warning"
-      );
-    }
-  }, []);
+  const { price } = useSelector((s) => s.price);
+  const { transactions } = useSelector((s) => s.transaction);
 
   return (
     <>
@@ -46,8 +35,16 @@ export default function Welcome() {
           </div>
         </div>
         <div className={style.pricesBox}>
-          <h2>Crop Price Listing</h2>
-          <p> Rice : 100 ETH </p>
+          <h2>Prices of Crops</h2>
+          <div>
+            {price.map((pr) => (
+              <>
+                <p>
+                  {pr.cropName} Sells for {pr.cropPrice} ETH
+                </p>
+              </>
+            ))}
+          </div>
         </div>
       </div>
     </>

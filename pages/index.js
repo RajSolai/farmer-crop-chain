@@ -1,22 +1,41 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { useSelector } from "react-redux";
-import Home from "../components/home";
-import Login from "../components/login";
+import {useRouter} from "next/router"
+import { connect, getAllTransactions, getCropsAndPrices } from "../services/contractActions";
+import Welcome from "./welcome";
 
 export default function Index() {
-  const isLogged = useSelector((s) => s.isLogged);
+  const router = useRouter()
 
-  if (isLogged) {
-    return (
-      <>
-        <Home />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <Login />
-      </>
-    );
-  }
+  useEffect(() => {
+    const provider = window.ethereum;
+    if (typeof provider != "undefined") {
+      provider.request({ method: "eth_requestAccounts" }).then((acc) => {
+        const sender = acc[0];
+        localStorage.setItem("acc", sender);
+        connect(provider, sender, () => {
+          console.log("Wallet connected :)");
+          getCropsAndPrices();
+          getAllTransactions();
+          setTimeout(() => {
+            router.push("/welcome")
+          }, 3000);
+        });
+      });
+    } else {
+      Swal.fire(
+        "No Wallets Found",
+        "Hey It seems you haven't installed Metamask extension",
+        "warning"
+      );
+    }
+  });
+
+  return (
+    <>
+      <div className="loading-page">
+        <h2>Loading</h2>
+      </div>
+    </>
+  );
 }

@@ -1,13 +1,20 @@
 import { Provider } from "react-redux";
 import "../styles/globals.css";
-import { createStore } from "redux";
+import { combineReducers, createStore } from "redux";
+import { pricesReducer } from "../redux/reducers/pricesReducer";
 import { loginReducer } from "../redux/reducers/loginReducer";
+import { transactionReducer } from "../redux/reducers/transactionReducer";
 
-const loginStore = createStore(loginReducer);
+const combinedReducer = combineReducers({
+  login: loginReducer,
+  price: pricesReducer,
+  transaction: transactionReducer,
+});
+export const store = createStore(combinedReducer);
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Provider store={loginStore}>
+    <Provider store={store}>
       <Component {...pageProps} />
     </Provider>
   );
