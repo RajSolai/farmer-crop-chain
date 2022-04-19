@@ -1,0 +1,20 @@
+.welcomePage {
+    margin: 1rem;
+}
+
+.titleBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transactionBox {
+    @extend .titleBox;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pricesBox {
+    @extend .transactionBox;
+}
