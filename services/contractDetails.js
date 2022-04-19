@@ -1,4 +1,4 @@
-export const contractAddress = "0x9521C886543d8175E8f8FbaAcf5563687F7766fc";
+export const contractAddress = "0x4357393d785A5e6134507B5ee48B08bFB02DB85b";
 
 export const contractAbi = [
   {
@@ -20,6 +20,19 @@ export const contractAbi = [
       },
     ],
     name: "addCrops",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "cropType",
+        type: "string",
+      },
+    ],
+    name: "addCropType",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -56,28 +69,22 @@ export const contractAbi = [
     inputs: [
       {
         internalType: "string",
-        name: "userId",
+        name: "_userAccountNumber",
         type: "string",
       },
       {
         internalType: "string",
-        name: "userType",
+        name: "_userPassword",
         type: "string",
       },
       {
         internalType: "string",
-        name: "userName",
+        name: "_userType",
         type: "string",
       },
     ],
-    name: "login",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
+    name: "createUser",
+    outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -119,6 +126,48 @@ export const contractAbi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getCropTypes",
+    outputs: [
+      {
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_userAccountNumber",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_userPassword",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_userType",
+        type: "string",
+      },
+    ],
+    name: "loginUser",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "string",
@@ -132,6 +181,19 @@ export const contractAbi = [
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "showTransactions",
+    outputs: [
+      {
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
       },
     ],
     stateMutability: "view",
