@@ -1,16 +1,20 @@
 import { contractAbi, contractAddress } from "./contractDetails";
 import Web3 from "web3";
+import { store } from "../pages/_app";
+import { savePrices } from "../redux/actions/savePrices";
 import Swal from "sweetalert2";
+import { saveTransactions } from "../redux/actions/saveTransactions";
 
 let cropChain = null;
 let sender = null;
 let web3 = null;
 
-export const connect = (provider, _sender) => {
+export const connect = (provider, _sender, nextFunction) => {
   const _web3 = new Web3(provider);
   web3 = _web3;
   sender = _sender;
   cropChain = new _web3.eth.Contract(contractAbi, contractAddress);
+  nextFunction();
   console.log("Connected to Web3 provider");
 };
 
@@ -106,22 +110,26 @@ export const loginUser = (userPassword, userType, nextFunction) => {
     });
 };
 
-export const getAllCrops = () => {
+export const getAllCrops = (nextFunction) => {
   cropChain.methods.getCropTypes().call((_, res) => {
-    if (!res) nextFunction(res);
+    if (res) nextFunction(res);
   });
 };
 
-export const addNewCrop = (cropType) => {
+export const addANewCrop = (cropType) => {
   cropChain.methods.addCropType(cropType).send({ from: sender }, (err, _) => {
     if (!err)
       Swal.fire("CropType Added", "Please wait until Transaction is confirmed");
   });
 };
 
-export const registerUser = (userPassword, userType) => {
+export const registerUser = (userAccount, userPassword, userType) => {
   cropChain.methods
-    .createUser(localStorage.getItem("acc"), userPassword, userType)
+    .createUser(
+      userAccount.toLowerCase() || localStorage.getItem("acc"),
+      userPassword,
+      userType
+    )
     .send({ from: sender }, (err, _) => {
       if (!err)
         Swal.fire(
@@ -131,8 +139,21 @@ export const registerUser = (userPassword, userType) => {
     });
 };
 
-export const getAllTransactions = (nextFunction) => {
+export const getAllTransactions = () => {
   cropChain.methods.showTransactions().call((err, res) => {
-    if (!res) nextFunction(res);
+    console.log(res);
+    store.dispatch(saveTransactions({ transactions: res }));
   });
+};
+
+export const getCropsAndPrices = () => {
+  var out = [];
+  getAllCrops((crops) => {
+    crops.forEach((crop) => {
+      getCropPrice(crop, (price) => {
+        out.push({ cropName: crop, cropPrice: price });
+      });
+    });
+  });
+  store.dispatch(savePrices({ price: out }));
 };
