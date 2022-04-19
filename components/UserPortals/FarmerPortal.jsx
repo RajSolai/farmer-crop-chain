@@ -24,7 +24,7 @@ export const textFieldStyle = {
 };
 
 export default function FarmerPortal() {
-  const userName = useSelector((s) => s.userName);
+  const userName = useSelector((s) => s.login.userName);
   const [cropTypes, setCropTypes] = useState([]);
 
   const [addedCropQuantity, setCropQuantity] = useState(0);

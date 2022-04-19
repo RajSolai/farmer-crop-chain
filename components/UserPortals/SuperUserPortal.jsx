@@ -28,7 +28,7 @@ export const textFieldStyle = {
 };
 
 export default function SuperUserPortal() {
-  const userName = useSelector((s) => s.userName);
+  const userName = useSelector((s) => s.login.userName);
   const [cropTypes, setCropTypes] = useState([]);
   const [addCropType, setCropType] = useState("");
   const [addCropPrice, setAddCropPrice] = useState(0);
