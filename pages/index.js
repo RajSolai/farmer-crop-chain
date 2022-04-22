@@ -16,10 +16,9 @@ export default function Index() {
         connect(provider, sender, () => {
           console.log("Wallet connected :)");
           getCropsAndPrices();
-          getAllTransactions();
           setTimeout(() => {
             router.push("/welcome")
-          }, 3000);
+          }, 5000);
         });
       });
     } else {
