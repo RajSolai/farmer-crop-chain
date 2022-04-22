@@ -11,8 +11,7 @@ import style from "../styles/welcome.module.scss";
 
 export default function Welcome() {
   const { price } = useSelector((s) => s.price);
-  const { transactions } = useSelector((s) => s.transaction);
-
+  const transactions = []
   return (
     <>
       <div className={style.welcomePage}>
@@ -29,10 +28,7 @@ export default function Welcome() {
         </div>
         <div className={style.transactionBox}>
           <h2>All Transactions</h2>
-          <div>
-            <p>Party 1 bought 10 rice from party2</p>
-            <p>Party 3 added 10 rice</p>
-          </div>
+          <Link href={"/transactions"}>Get all transactions</Link>
         </div>
         <div className={style.pricesBox}>
           <h2>Prices of Crops</h2>
