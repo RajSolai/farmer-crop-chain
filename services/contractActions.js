@@ -100,6 +100,7 @@ export const getCropPrice = (cropType, nextFunction) => {
 };
 
 export const loginUser = (userPassword, userType, nextFunction) => {
+  console.log(localStorage.getItem("acc"),userPassword,userType)
   cropChain.methods
     .loginUser(localStorage.getItem("acc"), userPassword, userType)
     .call((err, res) => {
@@ -139,10 +140,9 @@ export const registerUser = (userAccount, userPassword, userType) => {
     });
 };
 
-export const getAllTransactions = () => {
+export const getAllTransactions = (nextFunction) => {
   cropChain.methods.showTransactions().call((err, res) => {
-    console.log(res);
-    store.dispatch(saveTransactions({ transactions: res }));
+    if (!err) nextFunction(res);
   });
 };
 

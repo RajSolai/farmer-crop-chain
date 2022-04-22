@@ -1,4 +1,4 @@
 export const saveTransactions = (payload) => ({
-  type: "transactions",
+  type: "save",
   payload
 })
