@@ -11,12 +11,11 @@ import style from "../styles/welcome.module.scss";
 
 export default function Welcome() {
   const { price } = useSelector((s) => s.price);
-  const transactions = []
   return (
     <>
       <div className={style.welcomePage}>
         <div className={style.titleBox}>
-          <h1>Title</h1>
+          <h1>Farmer Blockchain </h1>
           <div>
             <Button variant="contained">
               <Link href={"/register"}>Create User</Link>
