@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllTransactions } from "../services/contractActions";
+import { Paper } from "@mui/material";
+import pageStyle from "../styles/pages.module.scss";
 
 export default function Transactions() {
   const [trans, setTrans] = useState([]);
@@ -13,9 +15,17 @@ export default function Transactions() {
 
   return (
     <>
-      <div className="transaction-page">
+      <div className={pageStyle.page}>
         <h2>All Transactions</h2>
-        <div className="transaction-box">{JSON.stringify(trans)}</div>
+        <div className={pageStyle.listBox}>
+          {trans.map((tran) => (
+            <>
+              <Paper className={pageStyle.listItem}>
+                <p>{tran}</p>
+              </Paper>
+            </>
+          ))}
+        </div>
       </div>
     </>
   );
