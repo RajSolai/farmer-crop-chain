@@ -79,7 +79,7 @@ export default function Register() {
               disablePortal
               id="combo-box-demo"
               options={userTypes}
-              onChange={(_, val) => setUserType(val.label.toLowerCase() || "")}
+              onChange={(_, val) => setUserType("customer")}
               sx={{ width: 300, margin: "0.5rem" }}
               renderInput={(params) => (
                 <TextField {...params} label="User Type" />
