@@ -33,7 +33,7 @@ export default function Register() {
         const sender = acc[0];
         localStorage.setItem("acc", sender);
         connect(provider, sender, () => {
-          registerUser(null,userPass, userType);
+          registerUser(sender, userPass, userType);
         });
       });
     } else {
