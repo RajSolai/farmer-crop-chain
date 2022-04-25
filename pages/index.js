@@ -1,11 +1,16 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import {useRouter} from "next/router"
-import { connect, getAllTransactions, getCropsAndPrices } from "../services/contractActions";
+import { useRouter } from "next/router";
+import {
+  connect,
+  getAllTransactions,
+  getCropsAndPrices,
+} from "../services/contractActions";
 import Welcome from "./welcome";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 export default function Index() {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const provider = window.ethereum;
@@ -17,7 +22,7 @@ export default function Index() {
           console.log("Wallet connected :)");
           getCropsAndPrices();
           setTimeout(() => {
-            router.push("/welcome")
+            router.push("/welcome");
           }, 5000);
         });
       });
@@ -33,7 +38,15 @@ export default function Index() {
   return (
     <>
       <div className="loading-page">
-        <h2>Loading</h2>
+        <div className="loading-animation" style={{ textAlign: "center" }}>
+          <Player
+            autoplay
+            loop
+            style={{ height: "400px" }}
+            src="https://assets1.lottiefiles.com/packages/lf20_sgn7zslb.json"
+          />
+          <h3>Loading, Please login with Metamask</h3>
+        </div>
       </div>
     </>
   );
